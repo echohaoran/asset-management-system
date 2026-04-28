@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.database import engine, Base
-from app.routers import assets, categories, users, dashboard, persons, departments
+from app.routers import assets, categories, users, dashboard, persons, departments, feishu
 
 Base.metadata.create_all(bind=engine)
 
@@ -21,6 +21,7 @@ app.include_router(users.router)
 app.include_router(dashboard.router)
 app.include_router(persons.router)
 app.include_router(departments.router)
+app.include_router(feishu.router)
 
 
 @app.get("/api/health")

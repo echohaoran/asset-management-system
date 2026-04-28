@@ -17,6 +17,8 @@ class UserOut(BaseModel):
     id: int
     username: str
     role: str
+    email: Optional[str] = None
+    avatar: Optional[str] = None
     created_at: datetime
 
     model_config = {"from_attributes": True}
@@ -171,3 +173,42 @@ class AssetImportItem(BaseModel):
     asset_code: str = ""
     sn: str = ""
     status: str = "在库"
+
+
+class FeishuLoginRequest(BaseModel):
+    code: str
+
+
+class FeishuUserOut(BaseModel):
+    id: int
+    username: str
+    role: str
+    email: Optional[str] = None
+    avatar: Optional[str] = None
+    created_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
+class FeishuTokenResponse(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+    user: FeishuUserOut
+
+
+class FeishuContactMember(BaseModel):
+    name: str
+    email: Optional[str] = None
+    avatar: Optional[str] = None
+    open_id: str
+    department_id: Optional[str] = None
+    department_name: Optional[str] = None
+
+
+class FeishuContactDepartment(BaseModel):
+    name: str
+    members: list[FeishuContactMember] = []
+
+
+class FeishuContactsResponse(BaseModel):
+    departments: list[FeishuContactDepartment]

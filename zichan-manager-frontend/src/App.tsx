@@ -9,6 +9,7 @@ import Categories from './pages/Categories';
 import Reports from './pages/Reports';
 import Persons from './pages/Persons';
 import Departments from './pages/Departments';
+import FeishuCallback from './pages/FeishuCallback';
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const token = localStorage.getItem('token');
@@ -21,6 +22,7 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/login/feishu/callback" element={<FeishuCallback />} />
           <Route
             path="/"
             element={

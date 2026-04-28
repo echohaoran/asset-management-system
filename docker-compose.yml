@@ -14,7 +14,7 @@ services:
       context: ./zichan-manager-frontend
       target: deps
     ports:
-      - "8080:5173"
+      - "3000:5173"
     volumes:
       - ./zichan-manager-frontend:/app
       - /app/node_modules

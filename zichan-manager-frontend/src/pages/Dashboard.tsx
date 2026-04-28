@@ -1,11 +1,55 @@
 import { useEffect, useState } from 'react';
-import { Row, Col, Card, Statistic, Spin, Radio } from 'antd';
-import { BankOutlined, CheckCircleOutlined, SwapOutlined, DeleteOutlined, DollarOutlined } from '@ant-design/icons';
+import { Row, Col, Card, Statistic, Spin, Radio, Empty } from 'antd';
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import client from '../api/client';
 import type { DashboardStats } from '../types';
 
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#82CA9D', '#FFC0CB', '#A0522D'];
+const COLORS = ['#0071e3', '#34c759', '#ff9500', '#ff3b30', '#af52de', '#5856d6', '#ffcc00', '#5ac8fa'];
+
+const StatCard = ({ title, value, suffix, color }: { title: string; value: number | string; suffix?: string; color: string }) => (
+  <Card
+    style={{
+      borderRadius: 20,
+      border: '1px solid rgba(255, 255, 255, 0.3)',
+      boxShadow: '0 4px 20px rgba(0, 0, 0, 0.06)',
+      background: 'rgba(255, 255, 255, 0.75)',
+      backdropFilter: 'blur(20px)',
+      WebkitBackdropFilter: 'blur(20px)',
+    }}
+    styles={{ body: { padding: 24 } }}
+  >
+    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+      <div>
+        <div
+          style={{
+            width: 48,
+            height: 48,
+            borderRadius: 14,
+            background: `${color}15`,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginBottom: 16,
+          }}
+        >
+          <div
+            style={{
+              width: 24,
+              height: 24,
+              borderRadius: '50%',
+              background: color,
+            }}
+          />
+        </div>
+        <div style={{ fontSize: 14, color: '#86868b', fontWeight: 500, marginBottom: 4 }}>{title}</div>
+        <div style={{ fontSize: 32, fontWeight: 600, color: '#1d1d1f', letterSpacing: '-0.021em' }}>
+          {value}
+          {suffix && <span style={{ fontSize: 18, marginLeft: 4 }}>{suffix}</span>}
+        </div>
+      </div>
+    </div>
+  </Card>
+);
 
 export default function Dashboard() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
@@ -27,71 +71,143 @@ export default function Dashboard() {
 
   return (
     <div>
-      <Row gutter={16}>
-        <Col span={4}>
-          <Card><Statistic title="资产总数" value={stats.total_assets} prefix={<BankOutlined />} /></Card>
+      <h1 style={{ fontSize: 32, fontWeight: 600, color: '#1d1d1f', marginBottom: 24, letterSpacing: '-0.021em' }}>
+        工作台
+      </h1>
+
+      <Row gutter={[24, 24]}>
+        <Col xs={24} sm={12} lg={6}>
+          <StatCard title="资产总数" value={stats.total_assets} color="#0071e3" />
         </Col>
-        <Col span={4}>
-          <Card><Statistic title="在库" value={stats.in_stock} prefix={<CheckCircleOutlined />} valueStyle={{ color: '#3f8600' }} /></Card>
+        <Col xs={24} sm={12} lg={6}>
+          <StatCard title="在库" value={stats.in_stock} color="#34c759" />
         </Col>
-        <Col span={4}>
-          <Card><Statistic title="领用中" value={stats.checked_out} prefix={<SwapOutlined />} valueStyle={{ color: '#1890ff' }} /></Card>
+        <Col xs={24} sm={12} lg={6}>
+          <StatCard title="领用中" value={stats.checked_out} color="#ff9500" />
         </Col>
-        <Col span={4}>
-          <Card><Statistic title="已报废" value={stats.disposed} prefix={<DeleteOutlined />} valueStyle={{ color: '#ff4d4f' }} /></Card>
-        </Col>
-        <Col span={4}>
-          <Card><Statistic title="总价值(元)" value={stats.total_value.toFixed(2)} prefix={<DollarOutlined />} /></Card>
+        <Col xs={24} sm={12} lg={6}>
+          <StatCard title="已报废" value={stats.disposed} color="#ff3b30" />
         </Col>
       </Row>
 
-      <Row gutter={16} style={{ marginTop: 24 }}>
-        <Col span={12}>
+      <Row gutter={[24, 24]} style={{ marginTop: 24 }}>
+        <Col xs={24} lg={12}>
           <Card
-            title="资产分布"
+            style={{ borderRadius: 20, border: 'none', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.06)' }}
+            styles={{ body: { padding: 24 } }}
+            title={
+              <span style={{ fontSize: 18, fontWeight: 600, color: '#1d1d1f' }}>资产分布</span>
+            }
             extra={
-              <Radio.Group value={chartType} onChange={(e) => setChartType(e.target.value)}>
-                <Radio.Button value="category">资产类型</Radio.Button>
-                <Radio.Button value="department">部门</Radio.Button>
+              <Radio.Group
+                value={chartType}
+                onChange={(e) => setChartType(e.target.value)}
+                style={{
+                  display: 'flex',
+                  gap: 8,
+                }}
+              >
+                <Radio.Button
+                  value="category"
+                  style={{
+                    borderRadius: 8,
+                    border: chartType === 'category' ? 'none' : '1px solid #d2d2d7',
+                    background: chartType === 'category' ? '#0071e3' : '#ffffff',
+                    color: chartType === 'category' ? '#ffffff' : '#1d1d1f',
+                    fontWeight: 500,
+                    padding: '4px 14px',
+                    height: 32,
+                    lineHeight: '22px',
+                    transition: 'all 0.2s ease',
+                  }}
+                >
+                  资产类型
+                </Radio.Button>
+                <Radio.Button
+                  value="department"
+                  style={{
+                    borderRadius: 8,
+                    border: chartType === 'department' ? 'none' : '1px solid #d2d2d7',
+                    background: chartType === 'department' ? '#0071e3' : '#ffffff',
+                    color: chartType === 'department' ? '#ffffff' : '#1d1d1f',
+                    fontWeight: 500,
+                    padding: '4px 14px',
+                    height: 32,
+                    lineHeight: '22px',
+                    transition: 'all 0.2s ease',
+                  }}
+                >
+                  部门
+                </Radio.Button>
               </Radio.Group>
             }
           >
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie
-                  data={pieData}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  label={({ name, value }) => `${name}: ${value}`}
-                  outerRadius={100}
-                  fill="#8884d8"
-                  dataKey="value"
-                >
-                  {pieData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
+            {pieData.length === 0 ? (
+              <div style={{ height: 320, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Empty description={<span style={{ color: '#86868b' }}>暂无数据</span>} />
+              </div>
+            ) : (
+              <ResponsiveContainer width="100%" height={320}>
+                <PieChart>
+                  <Pie
+                    data={pieData}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    label={({ name, value }) => `${name}: ${value}`}
+                    outerRadius={110}
+                    fill="#8884d8"
+                    dataKey="value"
+                  >
+                    {pieData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    contentStyle={{
+                      borderRadius: 12,
+                      border: 'none',
+                      boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
+                    }}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            )}
           </Card>
         </Col>
-        <Col span={12}>
-          <Card title="各分类资产统计（甘特图）">
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart
-                layout="vertical"
-                data={ganttData}
-                margin={{ top: 5, right: 30, left: 40, bottom: 5 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis type="number" />
-                <YAxis dataKey="name" type="category" width={80} />
-                <Tooltip />
-                <Bar dataKey="count" fill="#1890ff" />
-              </BarChart>
-            </ResponsiveContainer>
+        <Col xs={24} lg={12}>
+          <Card
+            style={{ borderRadius: 20, border: 'none', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.06)' }}
+            styles={{ body: { padding: 24 } }}
+            title={
+              <span style={{ fontSize: 18, fontWeight: 600, color: '#1d1d1f' }}>各分类资产统计</span>
+            }
+          >
+            {ganttData.length === 0 ? (
+              <div style={{ height: 320, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Empty description={<span style={{ color: '#86868b' }}>暂无数据</span>} />
+              </div>
+            ) : (
+              <ResponsiveContainer width="100%" height={320}>
+                <BarChart
+                  layout="vertical"
+                  data={ganttData}
+                  margin={{ top: 5, right: 30, left: 40, bottom: 5 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e8e8ed" />
+                  <XAxis type="number" tick={{ fill: '#86868b' }} />
+                  <YAxis dataKey="name" type="category" width={80} tick={{ fill: '#1d1d1f', fontSize: 13 }} />
+                  <Tooltip
+                    contentStyle={{
+                      borderRadius: 12,
+                      border: 'none',
+                      boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
+                    }}
+                  />
+                  <Bar dataKey="count" fill="#0071e3" radius={[0, 8, 8, 0]} barSize={24} />
+                </BarChart>
+              </ResponsiveContainer>
+            )}
           </Card>
         </Col>
       </Row>

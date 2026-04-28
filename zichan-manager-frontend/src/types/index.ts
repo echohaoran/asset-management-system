@@ -2,7 +2,42 @@ export interface User {
   id: number;
   username: string;
   role: string;
+  email?: string | null;
+  avatar?: string | null;
   created_at: string;
+}
+
+export interface FeishuUser {
+  id: number;
+  username: string;
+  role: string;
+  email?: string | null;
+  avatar?: string | null;
+  created_at: string;
+}
+
+export interface FeishuTokenResponse {
+  access_token: string;
+  token_type: string;
+  user: FeishuUser;
+}
+
+export interface FeishuContactMember {
+  name: string;
+  email?: string | null;
+  avatar?: string | null;
+  open_id: string;
+  department_id?: string | null;
+  department_name?: string | null;
+}
+
+export interface FeishuContactDepartment {
+  name: string;
+  members: FeishuContactMember[];
+}
+
+export interface FeishuContactsResponse {
+  departments: FeishuContactDepartment[];
 }
 
 export interface Category {

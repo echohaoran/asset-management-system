@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Table, Button, Modal, Form, Input, Space, message, Popconfirm, Tabs } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import { Table, Button, Modal, Space, message, Popconfirm, Tabs } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import client from '../api/client';
 import type { Department, Person, Asset } from '../types';
@@ -16,11 +15,8 @@ interface DepartmentDetail {
 export default function Departments() {
   const [departments, setDepartments] = useState<Department[]>([]);
   const [loading, setLoading] = useState(false);
-  const [modalOpen, setModalOpen] = useState(false);
   const [detailOpen, setDetailOpen] = useState(false);
-  const [editing, setEditing] = useState<Department | null>(null);
   const [detail, setDetail] = useState<DepartmentDetail | null>(null);
-  const [form] = Form.useForm();
   const navigate = useNavigate();
 
   const fetch = async () => {
@@ -31,31 +27,6 @@ export default function Departments() {
   };
 
   useEffect(() => { fetch(); }, []);
-
-  const openCreate = () => {
-    setEditing(null);
-    form.resetFields();
-    setModalOpen(true);
-  };
-
-  const openEdit = (dept: Department) => {
-    setEditing(dept);
-    form.setFieldsValue(dept);
-    setModalOpen(true);
-  };
-
-  const handleSubmit = async () => {
-    const values = await form.validateFields();
-    if (editing) {
-      await client.put(`/api/departments/${editing.id}`, values);
-      message.success('已更新');
-    } else {
-      await client.post('/api/departments', values);
-      message.success('已创建');
-    }
-    setModalOpen(false);
-    fetch();
-  };
 
   const handleDelete = async (id: number) => {
     try {
@@ -98,7 +69,6 @@ export default function Departments() {
       render: (_: any, record: Department) => (
         <Space>
           <Button type="link" onClick={() => openDetail(record)}>详情</Button>
-          <Button type="link" onClick={() => openEdit(record)}>编辑</Button>
           <Popconfirm title="确定删除?" onConfirm={() => handleDelete(record.id)}>
             <Button type="link" danger>删除</Button>
           </Popconfirm>
@@ -122,21 +92,7 @@ export default function Departments() {
 
   return (
     <div>
-      <Space style={{ marginBottom: 16 }}>
-        <Button type="primary" icon={<PlusOutlined />} onClick={openCreate}>新增部门</Button>
-      </Space>
       <Table columns={columns} dataSource={departments} rowKey="id" loading={loading} />
-
-      <Modal title={editing ? '编辑部门' : '新增部门'} open={modalOpen} onOk={handleSubmit} onCancel={() => setModalOpen(false)}>
-        <Form form={form} layout="vertical">
-          <Form.Item name="name" label="部门名称 *" rules={[{ required: true }]}>
-            <Input />
-          </Form.Item>
-          <Form.Item name="description" label="描述">
-            <Input.TextArea rows={3} />
-          </Form.Item>
-        </Form>
-      </Modal>
 
       <Modal
         title="部门详情"
