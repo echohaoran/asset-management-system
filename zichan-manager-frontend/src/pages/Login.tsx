@@ -26,7 +26,7 @@ export default function Login() {
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', background: '#f0f2f5' }}>
       <Card style={{ width: 400 }}>
         <div style={{ textAlign: 'center', marginBottom: 24 }}>
-          <div style={{ fontSize: 24, fontWeight: 'bold', color: '#1890ff' }}>固定资产管理系统</div>
+          <img src="/logo.png" alt="logo" style={{ maxHeight: 60, maxWidth: '100%' }} />
         </div>
         <Form onFinish={onFinish} size="large">
           <Form.Item name="username" rules={[{ required: true, message: '请输入用户名' }]}>

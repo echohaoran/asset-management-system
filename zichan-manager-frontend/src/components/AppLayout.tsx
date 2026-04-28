@@ -61,8 +61,8 @@ export default function AppLayout() {
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider collapsible>
-        <div style={{ height: 64, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 18, fontWeight: 'bold' }}>
-          固定资产管理
+        <div style={{ height: 64, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 16px' }}>
+          <img src="/logo.png" alt="logo" style={{ maxHeight: 40, maxWidth: '100%' }} />
         </div>
         <Menu
           theme="dark"
