@@ -16,6 +16,17 @@ class UserRole(str, enum.Enum):
     user = "user"
 
 
+class Person(Base):
+    __tablename__ = "persons"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, index=True)
+    department = Column(String, default="")
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+
+    assets = relationship("Asset", back_populates="person")
+
+
 class User(Base):
     __tablename__ = "users"
 
@@ -24,8 +35,6 @@ class User(Base):
     password_hash = Column(String)
     role = Column(String, default=UserRole.user.value)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
-
-    assets = relationship("Asset", back_populates="current_user")
 
 
 class Category(Base):
@@ -47,13 +56,13 @@ class Asset(Base):
     price = Column(Float, default=0.0)
     purchase_date = Column(DateTime, default=datetime.datetime.utcnow)
     status = Column(String, default=AssetStatus.in_stock.value)
-    current_user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    person_id = Column(Integer, ForeignKey("persons.id"), nullable=True)
     description = Column(String, default="")
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
 
     category = relationship("Category", back_populates="assets")
-    current_user = relationship("User", back_populates="assets")
+    person = relationship("Person", back_populates="assets")
     logs = relationship("AssetLog", back_populates="asset")
 
 

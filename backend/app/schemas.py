@@ -22,6 +22,34 @@ class UserOut(BaseModel):
     model_config = {"from_attributes": True}
 
 
+class UserCreate(BaseModel):
+    username: str
+    password: str
+    role: str = "user"
+
+
+class UserUpdate(BaseModel):
+    username: Optional[str] = None
+
+
+class UserPasswordUpdate(BaseModel):
+    password: str
+
+
+class PersonCreate(BaseModel):
+    name: str
+    department: str = ""
+
+
+class PersonOut(BaseModel):
+    id: int
+    name: str
+    department: str
+    created_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
 class CategoryCreate(BaseModel):
     name: str
     description: str = ""
@@ -70,14 +98,18 @@ class AssetOut(BaseModel):
     price: float
     purchase_date: datetime
     status: str
-    current_user_id: Optional[int] = None
-    current_user_name: Optional[str] = None
+    person_id: Optional[int] = None
+    person_name: Optional[str] = None
     description: str
     created_at: datetime
     updated_at: datetime
     logs: List[AssetLogOut] = []
 
     model_config = {"from_attributes": True}
+
+
+class PersonWithAssets(PersonOut):
+    assets: List[AssetOut] = []
 
 
 class DashboardStats(BaseModel):
@@ -87,9 +119,3 @@ class DashboardStats(BaseModel):
     disposed: int
     total_value: float
     category_stats: List[dict]
-
-
-class UserCreate(BaseModel):
-    username: str
-    password: str
-    role: str = "user"

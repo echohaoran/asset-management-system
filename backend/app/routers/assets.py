@@ -4,8 +4,8 @@ from sqlalchemy.orm import Session
 from sqlalchemy import desc
 from typing import Optional
 from app.database import get_db
-from app.models import User, Asset, AssetLog, Category
-from app.schemas import AssetCreate, AssetUpdate, AssetOut
+from app.models import Asset, AssetLog, Category, Person, User
+from app.schemas import AssetCreate, AssetUpdate, AssetOut, AssetLogOut
 from app.auth import get_current_user
 
 router = APIRouter(prefix="/api/assets", tags=["assets"])
@@ -14,7 +14,7 @@ router = APIRouter(prefix="/api/assets", tags=["assets"])
 def _asset_to_out(asset: Asset, db: Session) -> AssetOut:
     logs = db.query(AssetLog).filter(AssetLog.asset_id == asset.id).order_by(desc(AssetLog.created_at)).all()
     category_name = asset.category.name if asset.category else ""
-    current_user_name = asset.current_user.username if asset.current_user else None
+    person_name = asset.person.name if asset.person else None
     return AssetOut(
         id=asset.id,
         name=asset.name,
@@ -23,12 +23,12 @@ def _asset_to_out(asset: Asset, db: Session) -> AssetOut:
         price=asset.price,
         purchase_date=asset.purchase_date,
         status=asset.status,
-        current_user_id=asset.current_user_id,
-        current_user_name=current_user_name,
+        person_id=asset.person_id,
+        person_name=person_name,
         description=asset.description,
         created_at=asset.created_at,
         updated_at=asset.updated_at,
-        logs=[AssetLog(
+        logs=[AssetLogOut(
             id=log.id,
             action=log.action,
             operator_id=log.operator_id,
@@ -111,18 +111,21 @@ def update_asset(asset_id: int, req: AssetUpdate, db: Session = Depends(get_db),
 
 
 @router.post("/{asset_id}/checkout")
-def checkout_asset(asset_id: int, db: Session = Depends(get_db), user: User = Depends(get_current_user)):
+def checkout_asset(asset_id: int, person_id: int = Query(...), db: Session = Depends(get_db), user: User = Depends(get_current_user)):
     asset = db.query(Asset).filter(Asset.id == asset_id).first()
     if not asset:
         raise HTTPException(status_code=404, detail="资产不存在")
     if asset.status != "在库":
         raise HTTPException(status_code=400, detail=f"资产当前状态为'{asset.status}'，无法领用")
+    person = db.query(Person).filter(Person.id == person_id).first()
+    if not person:
+        raise HTTPException(status_code=404, detail="人员不存在")
     asset.status = "领用中"
-    asset.current_user_id = user.id
+    asset.person_id = person_id
     asset.updated_at = datetime.utcnow()
     db.commit()
-    _add_log(db, asset_id, "领用", user.id, f"由 {user.username} 领用")
-    return {"message": f"资产 '{asset.name}' 已由 {user.username} 领用"}
+    _add_log(db, asset_id, "领用", user.id, f"由 {person.name} 领用")
+    return {"message": f"资产 '{asset.name}' 已由 {person.name} 领用"}
 
 
 @router.post("/{asset_id}/return")
@@ -133,7 +136,7 @@ def return_asset(asset_id: int, db: Session = Depends(get_db), user: User = Depe
     if asset.status != "领用中":
         raise HTTPException(status_code=400, detail="资产当前未处于领用状态")
     asset.status = "在库"
-    asset.current_user_id = None
+    asset.person_id = None
     asset.updated_at = datetime.utcnow()
     db.commit()
     _add_log(db, asset_id, "归还", user.id, f"由 {user.username} 归还")
@@ -148,7 +151,7 @@ def dispose_asset(asset_id: int, db: Session = Depends(get_db), user: User = Dep
     if asset.status == "已报废":
         raise HTTPException(status_code=400, detail="资产已报废")
     asset.status = "已报废"
-    asset.current_user_id = None
+    asset.person_id = None
     asset.updated_at = datetime.utcnow()
     db.commit()
     _add_log(db, asset_id, "报废", user.id, "资产已报废")
