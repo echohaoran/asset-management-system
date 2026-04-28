@@ -2,10 +2,10 @@ from datetime import datetime
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from sqlalchemy import desc
-from typing import Optional
+from typing import Optional, List
 from app.database import get_db
 from app.models import Asset, AssetLog, Category, Person, User
-from app.schemas import AssetCreate, AssetUpdate, AssetOut, AssetLogOut
+from app.schemas import AssetCreate, AssetUpdate, AssetOut, AssetLogOut, AssetImportItem
 from app.auth import get_current_user
 
 router = APIRouter(prefix="/api/assets", tags=["assets"])
@@ -64,6 +64,38 @@ def create_asset(req: AssetCreate, db: Session = Depends(get_db), user: User = D
     db.refresh(asset)
     _add_log(db, asset.id, "登记", user.id, f"登记资产: {req.name}")
     return _asset_to_out(asset, db)
+
+
+@router.post("/batch-import", response_model=list[AssetOut])
+def batch_import_assets(items: List[AssetImportItem], db: Session = Depends(get_db), user: User = Depends(get_current_user)):
+    created = []
+    # cache category name -> id
+    cats = {c.name: c.id for c in db.query(Category).all()}
+    for item in items:
+        category_id = cats.get(item.category_name)
+        if not category_id:
+            raise HTTPException(status_code=400, detail=f"分类 '{item.category_name}' 不存在，请先创建该分类")
+        purchase_date = datetime.strptime(item.purchase_date, "%Y-%m-%d") if item.purchase_date else datetime.utcnow()
+        asset = Asset(
+            name=item.name,
+            category_id=category_id,
+            price=item.price,
+            purchase_date=purchase_date,
+            description=item.description,
+            model=item.model,
+            color=item.color,
+            asset_code=item.asset_code,
+            sn=item.sn,
+            status=item.status,
+        )
+        db.add(asset)
+        db.flush()
+        _add_log(db, asset.id, "登记", user.id, f"批量导入: {item.name}")
+        created.append(asset)
+    db.commit()
+    for a in created:
+        db.refresh(a)
+    return [_asset_to_out(a, db) for a in created]
 
 
 @router.get("", response_model=list[AssetOut])

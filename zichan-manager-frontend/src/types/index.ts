@@ -12,6 +12,26 @@ export interface Category {
   asset_count: number;
 }
 
+export interface Department {
+  id: number;
+  name: string;
+  description: string;
+  person_count: number;
+  asset_count: number;
+}
+
+export interface Person {
+  id: number;
+  name: string;
+  department_id: number | null;
+  department_name: string | null;
+  created_at: string;
+}
+
+export interface PersonWithAssets extends Person {
+  assets: Asset[];
+}
+
 export interface AssetLog {
   id: number;
   action: string;
@@ -47,6 +67,7 @@ export interface DashboardStats {
   disposed: number;
   total_value: number;
   category_stats: { name: string; count: number }[];
+  department_stats: { name: string; count: number }[];
 }
 
 export interface AssetCreate {

@@ -7,6 +7,8 @@ import Dashboard from './pages/Dashboard';
 import Assets from './pages/Assets';
 import Categories from './pages/Categories';
 import Reports from './pages/Reports';
+import Persons from './pages/Persons';
+import Departments from './pages/Departments';
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const token = localStorage.getItem('token');
@@ -31,6 +33,8 @@ export default function App() {
             <Route path="assets" element={<Assets />} />
             <Route path="categories" element={<Categories />} />
             <Route path="reports" element={<Reports />} />
+            <Route path="persons" element={<Persons />} />
+            <Route path="departments" element={<Departments />} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

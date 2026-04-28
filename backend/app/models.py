@@ -16,14 +16,26 @@ class UserRole(str, enum.Enum):
     user = "user"
 
 
+class Department(Base):
+    __tablename__ = "departments"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, unique=True, index=True)
+    description = Column(String, default="")
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+
+    persons = relationship("Person", back_populates="department")
+
+
 class Person(Base):
     __tablename__ = "persons"
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
-    department = Column(String, default="")
+    department_id = Column(Integer, ForeignKey("departments.id"), nullable=True)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
 
+    department = relationship("Department", back_populates="persons")
     assets = relationship("Asset", back_populates="person")
 
 

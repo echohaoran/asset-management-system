@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.database import engine, Base
-from app.routers import assets, categories, users, dashboard, persons
+from app.routers import assets, categories, users, dashboard, persons, departments
 
 Base.metadata.create_all(bind=engine)
 
@@ -20,6 +20,7 @@ app.include_router(categories.router)
 app.include_router(users.router)
 app.include_router(dashboard.router)
 app.include_router(persons.router)
+app.include_router(departments.router)
 
 
 @app.get("/api/health")

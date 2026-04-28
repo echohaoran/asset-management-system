@@ -8,6 +8,8 @@ import {
   BarChartOutlined,
   UserOutlined,
   LogoutOutlined,
+  TeamOutlined,
+  BankOutlined,
 } from '@ant-design/icons';
 import client from '../api/client';
 import type { User } from '../types';
@@ -26,6 +28,8 @@ export default function AppLayout() {
     { key: '/', icon: <DashboardOutlined />, label: '工作台' },
     { key: '/assets', icon: <LaptopOutlined />, label: '资产管理' },
     { key: '/categories', icon: <AppstoreOutlined />, label: '分类管理' },
+    { key: '/persons', icon: <TeamOutlined />, label: '人员管理' },
+    { key: '/departments', icon: <BankOutlined />, label: '部门管理' },
     { key: '/reports', icon: <BarChartOutlined />, label: '资产报表' },
   ];
 
@@ -58,7 +62,7 @@ export default function AppLayout() {
     <Layout style={{ minHeight: '100vh' }}>
       <Sider collapsible>
         <div style={{ height: 64, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 18, fontWeight: 'bold' }}>
-          资产管理
+          固定资产管理
         </div>
         <Menu
           theme="dark"

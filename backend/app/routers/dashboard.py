@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 from app.database import get_db
-from app.models import User, Asset, Category
+from app.models import User, Asset, Category, Department, Person
 from app.schemas import DashboardStats
 from app.auth import get_current_user
 
@@ -23,6 +23,14 @@ def get_stats(db: Session = Depends(get_db), user: User = Depends(get_current_us
         count = db.query(Asset).filter(Asset.category_id == c.id).count()
         category_stats.append({"name": c.name, "count": count})
 
+    # 部门统计
+    dept_stats = []
+    depts = db.query(Department).all()
+    for d in depts:
+        person_ids = [p.id for p in db.query(Person).filter(Person.department_id == d.id).all()]
+        count = db.query(Asset).filter(Asset.person_id.in_(person_ids)).count() if person_ids else 0
+        dept_stats.append({"name": d.name, "count": count})
+
     return DashboardStats(
         total_assets=total,
         in_stock=in_stock,
@@ -30,4 +38,5 @@ def get_stats(db: Session = Depends(get_db), user: User = Depends(get_current_us
         disposed=disposed,
         total_value=total_value,
         category_stats=category_stats,
+        department_stats=dept_stats,
     )

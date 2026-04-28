@@ -82,7 +82,7 @@ export default function Categories() {
 
       <Modal title={editing ? '编辑分类' : '新增分类'} open={modalOpen} onOk={handleSubmit} onCancel={() => setModalOpen(false)}>
         <Form form={form} layout="vertical">
-          <Form.Item name="name" label="分类名称" rules={[{ required: true }]}>
+          <Form.Item name="name" label="分类名称 *" rules={[{ required: true }]}>
             <Input />
           </Form.Item>
           <Form.Item name="description" label="描述">

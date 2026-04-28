@@ -36,15 +36,31 @@ class UserPasswordUpdate(BaseModel):
     password: str
 
 
+class DepartmentCreate(BaseModel):
+    name: str
+    description: str = ""
+
+
+class DepartmentOut(BaseModel):
+    id: int
+    name: str
+    description: str
+    person_count: int = 0
+    asset_count: int = 0
+
+    model_config = {"from_attributes": True}
+
+
 class PersonCreate(BaseModel):
     name: str
-    department: str = ""
+    department_id: Optional[int] = None
 
 
 class PersonOut(BaseModel):
     id: int
     name: str
-    department: str
+    department_id: Optional[int] = None
+    department_name: Optional[str] = None
     created_at: datetime
 
     model_config = {"from_attributes": True}
@@ -124,6 +140,16 @@ class PersonWithAssets(PersonOut):
     assets: List[AssetOut] = []
 
 
+class DepartmentDetail(BaseModel):
+    id: int
+    name: str
+    description: str
+    persons: List[PersonOut] = []
+    assets: List[AssetOut] = []
+
+    model_config = {"from_attributes": True}
+
+
 class DashboardStats(BaseModel):
     total_assets: int
     in_stock: int
@@ -131,3 +157,17 @@ class DashboardStats(BaseModel):
     disposed: int
     total_value: float
     category_stats: List[dict]
+    department_stats: List[dict] = []
+
+
+class AssetImportItem(BaseModel):
+    name: str
+    category_name: str = ""
+    price: float = 0.0
+    purchase_date: Optional[str] = None
+    description: str = ""
+    model: str = ""
+    color: str = ""
+    asset_code: str = ""
+    sn: str = ""
+    status: str = "在库"
