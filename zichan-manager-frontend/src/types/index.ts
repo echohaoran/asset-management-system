@@ -31,6 +31,10 @@ export interface Asset {
   current_user_id: number | null;
   current_user_name: string | null;
   description: string;
+  model: string;
+  color: string;
+  asset_code: string;
+  sn: string;
   created_at: string;
   updated_at: string;
   logs: AssetLog[];
@@ -51,4 +55,8 @@ export interface AssetCreate {
   price: number;
   purchase_date: string;
   description: string;
+  model: string;
+  color: string;
+  asset_code: string;
+  sn: string;
 }

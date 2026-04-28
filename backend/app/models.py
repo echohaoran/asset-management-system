@@ -58,6 +58,10 @@ class Asset(Base):
     status = Column(String, default=AssetStatus.in_stock.value)
     person_id = Column(Integer, ForeignKey("persons.id"), nullable=True)
     description = Column(String, default="")
+    model = Column(String, default="")
+    color = Column(String, default="")
+    asset_code = Column(String, default="", index=True)
+    sn = Column(String, default="", index=True)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
 

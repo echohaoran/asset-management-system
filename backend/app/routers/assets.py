@@ -26,6 +26,10 @@ def _asset_to_out(asset: Asset, db: Session) -> AssetOut:
         person_id=asset.person_id,
         person_name=person_name,
         description=asset.description,
+        model=asset.model,
+        color=asset.color,
+        asset_code=asset.asset_code,
+        sn=asset.sn,
         created_at=asset.created_at,
         updated_at=asset.updated_at,
         logs=[AssetLogOut(
@@ -50,6 +54,10 @@ def create_asset(req: AssetCreate, db: Session = Depends(get_db), user: User = D
         price=req.price,
         purchase_date=purchase_date,
         description=req.description,
+        model=req.model,
+        color=req.color,
+        asset_code=req.asset_code,
+        sn=req.sn,
     )
     db.add(asset)
     db.commit()
@@ -103,6 +111,14 @@ def update_asset(asset_id: int, req: AssetUpdate, db: Session = Depends(get_db),
         asset.purchase_date = datetime.strptime(req.purchase_date, "%Y-%m-%d")
     if req.description is not None:
         asset.description = req.description
+    if req.model is not None:
+        asset.model = req.model
+    if req.color is not None:
+        asset.color = req.color
+    if req.asset_code is not None:
+        asset.asset_code = req.asset_code
+    if req.sn is not None:
+        asset.sn = req.sn
     asset.updated_at = datetime.utcnow()
     db.commit()
     db.refresh(asset)

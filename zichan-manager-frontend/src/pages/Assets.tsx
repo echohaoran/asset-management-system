@@ -101,7 +101,10 @@ export default function Assets() {
 
   const columns = [
     { title: 'ID', dataIndex: 'id', key: 'id', width: 60 },
+    { title: '资产编码', dataIndex: 'asset_code', key: 'asset_code' },
     { title: '名称', dataIndex: 'name', key: 'name', render: (_: string, record: Asset) => <a onClick={() => showDetail(record.id)}>{_}</a> },
+    { title: '型号', dataIndex: 'model', key: 'model' },
+    { title: '颜色', dataIndex: 'color', key: 'color' },
     { title: '分类', dataIndex: 'category_name', key: 'category_name' },
     { title: '价格', dataIndex: 'price', key: 'price', render: (v: number) => `¥${v.toFixed(2)}` },
     { title: '购买日期', dataIndex: 'purchase_date', key: 'purchase_date', render: (v: string) => dayjs(v).format('YYYY-MM-DD') },
@@ -150,13 +153,29 @@ export default function Assets() {
           <Form.Item name="description" label="描述">
             <Input.TextArea rows={3} />
           </Form.Item>
+          <Form.Item name="model" label="型号">
+            <Input />
+          </Form.Item>
+          <Form.Item name="color" label="颜色">
+            <Input />
+          </Form.Item>
+          <Form.Item name="asset_code" label="资产编码">
+            <Input />
+          </Form.Item>
+          <Form.Item name="sn" label="设备SN">
+            <Input />
+          </Form.Item>
         </Form>
       </Modal>
 
       <Modal title="资产详情" open={detailOpen} onCancel={() => setDetailOpen(false)} footer={null} width={700}>
         {detailAsset && (
           <div>
+            <p><strong>资产编码：</strong>{detailAsset.asset_code || '-'}</p>
             <p><strong>名称：</strong>{detailAsset.name}</p>
+            <p><strong>型号：</strong>{detailAsset.model || '-'}</p>
+            <p><strong>颜色：</strong>{detailAsset.color || '-'}</p>
+            <p><strong>设备SN：</strong>{detailAsset.sn || '-'}</p>
             <p><strong>分类：</strong>{detailAsset.category_name}</p>
             <p><strong>价格：</strong>¥{detailAsset.price.toFixed(2)}</p>
             <p><strong>购买日期：</strong>{dayjs(detailAsset.purchase_date).format('YYYY-MM-DD')}</p>

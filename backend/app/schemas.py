@@ -70,6 +70,10 @@ class AssetCreate(BaseModel):
     price: float = 0.0
     purchase_date: Optional[str] = None
     description: str = ""
+    model: str = ""
+    color: str = ""
+    asset_code: str = ""
+    sn: str = ""
 
 
 class AssetUpdate(BaseModel):
@@ -78,6 +82,10 @@ class AssetUpdate(BaseModel):
     price: Optional[float] = None
     purchase_date: Optional[str] = None
     description: Optional[str] = None
+    model: Optional[str] = None
+    color: Optional[str] = None
+    asset_code: Optional[str] = None
+    sn: Optional[str] = None
 
 
 class AssetLogOut(BaseModel):
@@ -101,6 +109,10 @@ class AssetOut(BaseModel):
     person_id: Optional[int] = None
     person_name: Optional[str] = None
     description: str
+    model: str = ""
+    color: str = ""
+    asset_code: str = ""
+    sn: str = ""
     created_at: datetime
     updated_at: datetime
     logs: List[AssetLogOut] = []
