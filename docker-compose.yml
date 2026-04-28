@@ -4,17 +4,23 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - zichan_data:/app
+      - ./backend:/app
     environment:
       - PYTHONUNBUFFERED=1
-    command: sh -c "python seed.py && uvicorn app.main:app --host 0.0.0.0 --port 8000"
+    command: sh -c "python seed.py && uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
 
   frontend:
-    build: ./zichan-manager-frontend
+    build:
+      context: ./zichan-manager-frontend
+      target: deps
     ports:
-      - "8080:80"
+      - "8080:5173"
+    volumes:
+      - ./zichan-manager-frontend:/app
+      - /app/node_modules
+    working_dir: /app
+    command: npm run dev -- --host
+    environment:
+      - NODE_ENV=development
     depends_on:
       - backend
-
-volumes:
-  zichan_data:
