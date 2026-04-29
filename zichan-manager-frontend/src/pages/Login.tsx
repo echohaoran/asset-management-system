@@ -145,16 +145,7 @@ export default function Login() {
           飞书一键登录
         </Button>
 
-        <div
-          style={{
-            textAlign: 'center',
-            color: '#86868b',
-            fontSize: 13,
-            marginTop: 24,
-          }}
-        >
-          默认管理员: admin / admin123
-        </div>
+
       </div>
     </div>
   );
