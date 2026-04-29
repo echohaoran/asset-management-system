@@ -11,7 +11,6 @@ import {
   TeamOutlined,
   BankOutlined,
   MenuOutlined,
-  CloseOutlined,
   SettingOutlined,
 } from '@ant-design/icons';
 import client from '../api/client';

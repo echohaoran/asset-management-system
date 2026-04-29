@@ -774,10 +774,9 @@ body {
   margin-bottom: 20px;
   display: flex;
   flex-wrap: wrap;
-  contain: layout style;
-}
   gap: 12px;
   align-items: center;
+  contain: layout style;
 }
 
 /* ========== Stat Cards ========== */

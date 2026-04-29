@@ -1,6 +1,6 @@
 services:
   backend:
-    build: ./backend
+    image: ghcr.io/echohaoran/asset-management-system/zichan-backend:latest
     ports:
       - "8000:8000"
     volumes:
@@ -10,21 +10,12 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
     command: sh -c "python seed.py && uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
+    restart: unless-stopped
 
   frontend:
-    build:
-      context: ./zichan-manager-frontend
-      target: deps
+    image: ghcr.io/echohaoran/asset-management-system/zichan-frontend:latest
     ports:
-      - "3000:5173"
-    volumes:
-      - ./zichan-manager-frontend:/app
-      - /app/node_modules
-    working_dir: /app
-    command: npm run dev -- --host
-    env_file:
-      - ./zichan-manager-frontend/.env
-    environment:
-      - NODE_ENV=development
+      - "8080:80"
     depends_on:
       - backend
+    restart: unless-stopped

@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { Table, Button, Modal, Form, Input, InputNumber, Select, DatePicker, Space, Tag, message, Popconfirm, Upload } from 'antd';
+import { Table, Button, Modal, Form, Input, InputNumber, Select, DatePicker, Space, Tag, message, Popconfirm } from 'antd';
 import { PlusOutlined, SearchOutlined, DownloadOutlined, UploadOutlined } from '@ant-design/icons';
 import { useSearchParams } from 'react-router-dom';
 import dayjs from 'dayjs';
@@ -133,13 +133,6 @@ export default function Assets() {
       },
     ];
     const ws = XLSX.utils.json_to_sheet(templateRows);
-    // 添加表头样式（通过设置单元格样式）
-    const headerStyle = {
-      font: { bold: true, color: { rgb: 'FFFFFF' } },
-      fill: { fgColor: { rgb: '1890FF' } },
-      alignment: { horizontal: 'center', vertical: 'center' },
-    };
-    // 设置列宽
     ws['!cols'] = [
       { wch: 15 }, { wch: 20 }, { wch: 15 }, { wch: 10 },
       { wch: 12 }, { wch: 10 }, { wch: 14 }, { wch: 10 },
@@ -352,8 +345,8 @@ export default function Assets() {
 
   const statusColors: Record<string, string> = { '在库': 'green', '领用中': 'blue', '已报废': 'red' };
 
-  const columns = [
-    { title: 'ID', dataIndex: 'id', key: 'id', width: 60, sorter: (a: Asset, b: Asset) => a.id - b.id, defaultSortOrder: 'ascend' },
+  const columns: any[] = [
+    { title: 'ID', dataIndex: 'id', key: 'id', width: 60, sorter: (a: Asset, b: Asset) => a.id - b.id, defaultSortOrder: 'ascend' as const },
     { title: '资产编码', dataIndex: 'asset_code', key: 'asset_code', sorter: (a: Asset, b: Asset) => (a.asset_code || '').localeCompare(b.asset_code || '') },
     { title: '名称', dataIndex: 'name', key: 'name', sorter: (a: Asset, b: Asset) => a.name.localeCompare(b.name), render: (_: string, record: Asset) => <a onClick={() => showDetail(record.id)}>{_}</a> },
     { title: '型号', dataIndex: 'model', key: 'model', sorter: (a: Asset, b: Asset) => (a.model || '').localeCompare(b.model || '') },
@@ -549,19 +542,19 @@ export default function Assets() {
                 dataIndex: f.key,
                 key: f.key,
                 width: f.key === 'description' ? 180 : 120,
-                onCell: (_: any, index: number) => {
-                  const row = previewData[index];
+                onCell: (_: any, index?: number) => {
+                  const row = previewData[index!];
                   const invalid = f.required && !row?.[f.key];
                   return { style: invalid ? { background: '#fff2f0' } : {} };
                 },
-                render: (val: any, _: any, index: number) => {
+                render: (val: any, _: any, index?: number) => {
                   if (f.key === 'category_name') {
                     return (
                       <Select
                         size="small"
                         style={{ width: '100%' }}
                         value={val || undefined}
-                        onChange={(v) => updatePreviewRow(index, f.key, v)}
+                        onChange={(v) => updatePreviewRow(index!, f.key, v)}
                         showSearch
                       >
                         {categories.map(c => (
@@ -577,7 +570,7 @@ export default function Assets() {
                         style={{ width: '100%' }}
                         value={parseFloat(val) || 0}
                         min={0}
-                        onChange={(v) => updatePreviewRow(index, f.key, v)}
+                        onChange={(v) => updatePreviewRow(index!, f.key, v)}
                       />
                     );
                   }
@@ -587,7 +580,7 @@ export default function Assets() {
                         size="small"
                         value={val}
                         placeholder="YYYY-MM-DD"
-                        onChange={(e) => updatePreviewRow(index, f.key, e.target.value)}
+                        onChange={(e) => updatePreviewRow(index!, f.key, e.target.value)}
                       />
                     );
                   }
@@ -595,7 +588,7 @@ export default function Assets() {
                     <Input
                       size="small"
                       value={val}
-                      onChange={(e) => updatePreviewRow(index, f.key, e.target.value)}
+                      onChange={(e) => updatePreviewRow(index!, f.key, e.target.value)}
                     />
                   );
                 },
@@ -603,12 +596,12 @@ export default function Assets() {
               {
                 title: '状态', key: 'status',
                 width: 100,
-                render: (_: any, record: any, index: number) => (
+                render: (_: any, record: any, index?: number) => (
                   <Select
                     size="small"
                     style={{ width: 90 }}
                     value={record.status || '在库'}
-                    onChange={(v) => updatePreviewRow(index, 'status', v)}
+                    onChange={(v) => updatePreviewRow(index!, 'status', v)}
                   >
                     {STATUS_OPTIONS.map(s => (
                       <Select.Option key={s} value={s}>{s}</Select.Option>
@@ -618,8 +611,8 @@ export default function Assets() {
               },
               {
                 title: '操作', key: 'action', width: 60,
-                render: (_: any, __: any, index: number) => (
-                  <Button type="link" danger size="small" onClick={() => removePreviewRow(index)}>删除</Button>
+                render: (_: any, __: any, index?: number) => (
+                  <Button type="link" danger size="small" onClick={() => removePreviewRow(index!)}>删除</Button>
                 ),
               },
             ]}

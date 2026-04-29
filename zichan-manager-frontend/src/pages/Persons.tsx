@@ -113,7 +113,6 @@ export default function Persons() {
 
   // 搜索飞书用户
   const [searchResults, setSearchResults] = useState<FeishuContactMember[]>([]);
-  const [searching, setSearching] = useState(false);
   const [hasCache, setHasCache] = useState<boolean | null>(null);
 
   const fetch = async () => {
@@ -155,14 +154,12 @@ export default function Persons() {
       setSearchResults([]);
       return;
     }
-    setSearching(true);
     try {
       const res = await client.get<FeishuContactMember[]>('/api/feishu/search', { params: { q: value } });
       setSearchResults(res.data);
     } catch {
       setSearchResults([]);
     }
-    setSearching(false);
   };
 
   const handleSelectFeishuUser = async (open_id: string) => {
@@ -248,17 +245,6 @@ export default function Persons() {
       message.error('获取飞书通讯录失败: ' + (err.response?.data?.detail || err.message));
     }
     setFeishuLoading(false);
-  };
-
-  // 从树中收集所有成员（用于搜索）
-  const collectAllMembers = (nodes: FeishuDepartmentTree[]): FeishuContactMember[] => {
-    const members: FeishuContactMember[] = [];
-    const traverse = (node: FeishuDepartmentTree) => {
-      if (node.members) members.push(...node.members);
-      if (node.children) node.children.forEach(traverse);
-    };
-    nodes.forEach(traverse);
-    return members;
   };
 
   // 过滤树（搜索功能）
@@ -389,7 +375,6 @@ export default function Persons() {
               onSearch={handleSearch}
               onSelect={handleSelectFeishuUser}
               placeholder={hasCache === false ? "请先点击'从飞书同步'导入通讯录" : "输入姓名搜索飞书用户"}
-              loading={searching}
               style={{ width: '100%' }}
               disabled={hasCache === false}
             >

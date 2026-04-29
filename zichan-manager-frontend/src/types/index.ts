@@ -88,8 +88,8 @@ export interface Asset {
   price: number;
   purchase_date: string;
   status: string;
-  current_user_id: number | null;
-  current_user_name: string | null;
+  person_id: number | null;
+  person_name: string | null;
   description: string;
   model: string;
   color: string;
