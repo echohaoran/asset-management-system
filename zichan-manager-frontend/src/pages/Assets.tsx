@@ -270,6 +270,7 @@ export default function Assets() {
   const openCreate = () => {
     setEditingAsset(null);
     form.resetFields();
+    form.setFieldsValue({ sn: '空' });
     setModalOpen(true);
   };
 
@@ -278,6 +279,7 @@ export default function Assets() {
     form.setFieldsValue({
       ...asset,
       purchase_date: dayjs(asset.purchase_date),
+      sn: asset.sn || '空',
     });
     setModalOpen(true);
   };
@@ -287,6 +289,7 @@ export default function Assets() {
     const data: AssetCreate = {
       ...values,
       purchase_date: values.purchase_date.format('YYYY-MM-DD'),
+      sn: values.sn?.trim() || '空',
     };
     if (editingAsset) {
       await client.put(`/api/assets/${editingAsset.id}`, data);
@@ -388,20 +391,20 @@ export default function Assets() {
         <input ref={fileInputRef} type="file" accept=".xlsx,.xls,.csv" style={{ display: 'none' }} onChange={handleFileSelect} />
       </Space>
 
-      <Table columns={columns} dataSource={assets} rowKey="id" loading={loading} />
+      <Table columns={columns} dataSource={assets} rowKey="id" loading={loading} showSorterTooltip={false} />
 
       <Modal title={editingAsset ? '编辑资产' : '新增资产'} open={modalOpen} onOk={handleSubmit} onCancel={() => setModalOpen(false)} width={600}>
         <Form form={form} layout="vertical">
-          <Form.Item name="name" label="资产名称 *" rules={[{ required: true }]}>
+          <Form.Item name="name" label={<><span style={{color:'#ff3b30'}}>*</span> 资产名称</>} rules={[{ required: true }]}>
             <Input />
           </Form.Item>
-          <Form.Item name="category_id" label="分类 *" rules={[{ required: true }]}>
+          <Form.Item name="category_id" label={<><span style={{color:'#ff3b30'}}>*</span> 分类</>} rules={[{ required: true }]}>
             <Select options={categories.map((c) => ({ label: c.name, value: c.id }))} />
           </Form.Item>
           <Form.Item name="price" label="价格">
             <InputNumber style={{ width: '100%' }} min={0} />
           </Form.Item>
-          <Form.Item name="purchase_date" label="购买日期">
+          <Form.Item name="purchase_date" label={<><span style={{color:'#ff3b30'}}>*</span> 购买日期</>} rules={[{ required: true, message: '请选择购买日期' }]}>
             <DatePicker style={{ width: '100%' }} />
           </Form.Item>
           <Form.Item name="description" label="描述">
@@ -413,11 +416,11 @@ export default function Assets() {
           <Form.Item name="color" label="颜色">
             <Input />
           </Form.Item>
-          <Form.Item name="asset_code" label="资产编码">
+          <Form.Item name="asset_code" label={<><span style={{color:'#ff3b30'}}>*</span> 资产编码</>} rules={[{ required: true, message: '请输入资产编码' }]}>
             <Input />
           </Form.Item>
-          <Form.Item name="sn" label="设备SN">
-            <Input />
+          <Form.Item name="sn" label={<><span style={{color:'#ff3b30'}}>*</span> 设备SN</>} rules={[{ required: true, message: '请输入设备SN' }]}>
+            <Input placeholder="若无则填'空'" />
           </Form.Item>
         </Form>
       </Modal>

@@ -91,12 +91,12 @@ class AssetCreate(BaseModel):
     name: str
     category_id: int
     price: float = 0.0
-    purchase_date: Optional[str] = None
+    purchase_date: str
     description: str = ""
     model: str = ""
     color: str = ""
-    asset_code: str = ""
-    sn: str = ""
+    asset_code: str
+    sn: str = "空"
 
 
 class AssetUpdate(BaseModel):

@@ -12,9 +12,7 @@ const StatCard = ({ title, value, suffix, color }: { title: string; value: numbe
       borderRadius: 20,
       border: '1px solid rgba(255, 255, 255, 0.3)',
       boxShadow: '0 4px 20px rgba(0, 0, 0, 0.06)',
-      background: 'rgba(255, 255, 255, 0.75)',
-      backdropFilter: 'blur(20px)',
-      WebkitBackdropFilter: 'blur(20px)',
+      background: 'rgba(255, 255, 255, 0.85)',
     }}
     styles={{ body: { padding: 24 } }}
   >

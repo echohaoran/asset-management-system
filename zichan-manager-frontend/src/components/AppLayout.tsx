@@ -193,7 +193,6 @@ export default function AppLayout() {
           placement="left"
           open={mobileOpen}
           onClose={() => setMobileOpen(false)}
-          width={280}
           closable={false}
           styles={{
             body: { padding: 0 },
@@ -285,7 +284,7 @@ export default function AppLayout() {
       <Layout
         style={{
           marginLeft: isMobile ? 0 : collapsed ? 80 : 240,
-          transition: 'margin-left 0.2s ease',
+          transition: 'none',
           minHeight: '100vh',
         }}
       >
@@ -293,9 +292,7 @@ export default function AppLayout() {
         {!isMobile && (
           <Header
             style={{
-              background: 'rgba(255, 255, 255, 0.85)',
-              backdropFilter: 'saturate(180%) blur(20px)',
-              WebkitBackdropFilter: 'saturate(180%) blur(20px)',
+              background: '#ffffff',
               padding: '0 32px',
               display: 'flex',
               justifyContent: 'flex-end',
@@ -335,7 +332,7 @@ export default function AppLayout() {
           style={{
             flex: 1,
             padding: isMobile ? '72px 12px 24px' : '24px 32px',
-            overflow: 'auto',
+            overflowX: 'hidden',
             background: '#fbfbfd',
           }}
         >
@@ -369,7 +366,7 @@ export default function AppLayout() {
           height: 44px;
           line-height: 44px;
           border-radius: 8px;
-          transition: all 0.2s ease;
+          transition: background 0.2s ease, color 0.2s ease;
           color: #1d1d1f;
         }
         .ant-menu-light .ant-menu-item .anticon {
@@ -389,6 +386,42 @@ export default function AppLayout() {
         }
         .ant-menu-light .ant-menu-item-selected .anticon {
           color: #0071e3;
+        }
+        .ant-btn {
+          transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+        }
+        .ant-btn:hover {
+          transform: none !important;
+        }
+        .ant-table-column-sorter {
+          transition: none !important;
+        }
+        .ant-table-column-sorter:hover {
+          transform: none !important;
+        }
+        .ant-table-filter-trigger {
+          transition: none !important;
+        }
+        .ant-table-filter-trigger:hover {
+          transform: none !important;
+        }
+        .ant-table-thead > tr > th {
+          transition: none !important;
+          position: relative;
+        }
+        .ant-table-cell {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        .ant-table-wrapper {
+          overflow-x: auto !important;
+        }
+        .ant-table-column-sorter .anticon {
+          pointer-events: none;
+        }
+        .ant-table-filter-trigger .anticon {
+          pointer-events: none;
         }
       `}</style>
     </Layout>
