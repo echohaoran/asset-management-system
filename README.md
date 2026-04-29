@@ -339,6 +339,9 @@ cp zichan-manager-frontend/.env_example zichan-manager-frontend/.env
 
 生产环境建议使用 PostgreSQL/MySQL，需自行配置数据库连接。
 
+## 页面风格
+![alt text](asset/image-1.png)
+![alt text](asset/image-2.png)
 ## 许可证
 
 MIT License

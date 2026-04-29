@@ -25,3 +25,4 @@ yarn-debug.log*
 *.swo
 *~
 .cache/
+public/logo.png
