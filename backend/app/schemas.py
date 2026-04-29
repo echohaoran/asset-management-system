@@ -32,6 +32,11 @@ class UserCreate(BaseModel):
 
 class UserUpdate(BaseModel):
     username: Optional[str] = None
+    role: Optional[str] = None
+
+
+class UserRoleUpdate(BaseModel):
+    role: str
 
 
 class UserPasswordUpdate(BaseModel):
@@ -210,5 +215,15 @@ class FeishuContactDepartment(BaseModel):
     members: list[FeishuContactMember] = []
 
 
+class FeishuDepartmentTree(BaseModel):
+    open_department_id: str
+    name: str
+    parent_open_department_id: Optional[str] = None
+    members: List[FeishuContactMember] = []
+    children: List["FeishuDepartmentTree"] = []
+
+
 class FeishuContactsResponse(BaseModel):
-    departments: list[FeishuContactDepartment]
+    departments: List[FeishuDepartmentTree] = []
+    total_departments: int = 0
+    total_users: int = 0

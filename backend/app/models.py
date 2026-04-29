@@ -96,3 +96,37 @@ class AssetLog(Base):
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
 
     asset = relationship("Asset", back_populates="logs")
+
+
+class FeishuDepartment(Base):
+    __tablename__ = "feishu_departments"
+
+    id = Column(Integer, primary_key=True, index=True)
+    open_department_id = Column(String, unique=True, index=True)
+    name = Column(String, index=True)
+    parent_open_department_id = Column(String, nullable=True)
+    synced_at = Column(DateTime, default=datetime.datetime.utcnow)
+
+
+class FeishuUser(Base):
+    __tablename__ = "feishu_users"
+
+    id = Column(Integer, primary_key=True, index=True)
+    open_id = Column(String, unique=True, index=True)
+    name = Column(String, index=True)
+    email = Column(String, nullable=True)
+    avatar = Column(String, nullable=True)
+    open_department_id = Column(String, index=True)
+    department_name = Column(String, default="")
+    synced_at = Column(DateTime, default=datetime.datetime.utcnow)
+
+
+class FeishuSyncLog(Base):
+    __tablename__ = "feishu_sync_logs"
+
+    id = Column(Integer, primary_key=True, index=True)
+    sync_type = Column(String)
+    departments_count = Column(Integer, default=0)
+    users_count = Column(Integer, default=0)
+    duration_seconds = Column(Float, default=0)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)

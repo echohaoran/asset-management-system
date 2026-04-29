@@ -9,6 +9,7 @@ import Categories from './pages/Categories';
 import Reports from './pages/Reports';
 import Persons from './pages/Persons';
 import Departments from './pages/Departments';
+import Users from './pages/Users';
 import FeishuCallback from './pages/FeishuCallback';
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
@@ -37,6 +38,7 @@ export default function App() {
             <Route path="reports" element={<Reports />} />
             <Route path="persons" element={<Persons />} />
             <Route path="departments" element={<Departments />} />
+            <Route path="users" element={<Users />} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

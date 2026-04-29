@@ -127,8 +127,10 @@ export default function Login() {
           block
           size="large"
           onClick={() => {
+            const redirectUri = `${window.location.origin}/login/feishu/callback`;
+            const encodedRedirectUri = encodeURIComponent(redirectUri);
             window.location.href =
-              'https://open.feishu.cn/open-apis/authen/v1/index?app_id=cli_a96af4517eb99bb5&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Flogin%2Ffeishu%2Fcallback';
+              `https://open.feishu.cn/open-apis/authen/v1/index?app_id=${import.meta.env.VITE_FEISHU_APP_ID}&redirect_uri=${encodedRedirectUri}&state=`;
           }}
           style={{
             height: 52,

@@ -107,6 +107,31 @@ docker-compose up -d
 
 默认管理员账号：`admin` / `admin123`
 
+### 部署说明
+
+#### 无需云服务器
+
+本项目只需**任何一台能联网的电脑**即可运行。后端主动调用飞书 API 获取数据（出站请求），不要求飞书服务器访问你的电脑。
+
+| 功能 | 是否需要公网 |
+|------|------------|
+| 飞书通讯录同步 | ❌ 不需要 |
+| 飞书 OAuth 登录 | ❌ 不需要 |
+| 飞书机器人事件回调 | ✅ 需要（当前未使用） |
+
+#### 数据持久化
+
+数据库文件 `backend/zichan.db` 存储在项目目录中（通过 bind mount 挂载到容器），**重启容器不会丢失数据**。
+
+| 操作 | 数据是否丢失 |
+|------|------------|
+| `podman-compose down` + `up` | ❌ 不丢失 |
+| `podman-compose restart` | ❌ 不丢失 |
+| 手动删除 `backend/zichan.db` | ✅ 丢失 |
+| `podman-compose down -v` | ❌ 不丢失（bind mount 不受影响） |
+
+每次启动会自动执行 `seed.py` 初始化数据，但它使用 `create_all` + `if not` 判断，**不会覆盖已有数据**。
+
 ### 本地开发
 
 #### 后端
@@ -191,11 +216,42 @@ npm run dev
 
 ### 环境变量
 
-后端：
-- `PYTHONUNBUFFERED=1` - Python 输出不缓冲
+项目使用 `.env` 文件管理敏感配置，**敏感信息不写入代码**。
 
-前端：
-- `NODE_ENV=development` - 开发环境
+#### 后端配置 (`backend/.env`)
+
+```bash
+FEISHU_APP_ID=cli_xxxxxxxxxxxxxxxx
+FEISHU_APP_SECRET=your_feishu_app_secret_here
+```
+
+首次部署前，复制模板并填入真实值：
+
+```bash
+cp backend/.env_example backend/.env
+# 编辑 backend/.env 填入飞书 App ID 和 Secret
+```
+
+#### 前端配置 (`zichan-manager-frontend/.env`)
+
+```bash
+VITE_API_URL=http://localhost:8000
+VITE_FEISHU_APP_ID=cli_xxxxxxxxxxxxxxxx
+```
+
+首次部署前，复制模板并填入真实值：
+
+```bash
+cp zichan-manager-frontend/.env_example zichan-manager-frontend/.env
+# 编辑 .env 填入飞书 App ID
+```
+
+#### 获取飞书配置
+
+1. 访问 [飞书开放平台](https://open.feishu.cn/)，创建企业自建应用
+2. 在应用详情页获取 `App ID` 和 `App Secret`
+3. 配置应用权限：`contact:user.base:readonly`、`contact:user.email:readonly`、`authen:user.id:readonly`
+4. 配置重定向 URL：`http://your-domain/login/feishu/callback`
 
 ### 端口配置
 

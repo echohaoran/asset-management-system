@@ -3,9 +3,15 @@ __pycache__/
 *$py.class
 *.so
 .env
+.env.local
+backend/.env
+backend/.env_local
 .venv/
 venv/
 *.db
 node_modules/
 dist/
 .vite/
+
+public/logo.png
+backend/zichan.db

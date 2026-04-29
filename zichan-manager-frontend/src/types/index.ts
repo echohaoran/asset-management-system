@@ -24,20 +24,25 @@ export interface FeishuTokenResponse {
 
 export interface FeishuContactMember {
   name: string;
-  email?: string | null;
-  avatar?: string | null;
+  email: string | null;
+  avatar: string | null;
   open_id: string;
-  department_id?: string | null;
-  department_name?: string | null;
+  department_id: string | null;
+  department_name: string | null;
 }
 
-export interface FeishuContactDepartment {
+export interface FeishuDepartmentTree {
+  open_department_id: string;
   name: string;
+  parent_open_department_id: string | null;
   members: FeishuContactMember[];
+  children: FeishuDepartmentTree[];
 }
 
 export interface FeishuContactsResponse {
-  departments: FeishuContactDepartment[];
+  departments: FeishuDepartmentTree[];
+  total_departments: number;
+  total_users: number;
 }
 
 export interface Category {

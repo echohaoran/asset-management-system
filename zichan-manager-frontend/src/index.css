@@ -33,6 +33,11 @@
   box-sizing: border-box;
 }
 
+*:focus-visible {
+  outline: 2px solid var(--apple-blue);
+  outline-offset: 2px;
+}
+
 html {
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
@@ -132,6 +137,7 @@ body {
   background: rgba(255, 255, 255, 0.75);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
+  will-change: transform, filter;
 }
 
 .ant-table-thead > tr > th {
@@ -175,12 +181,20 @@ body {
   background: rgba(255, 255, 255, 0.75);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  transition: all 0.3s ease;
+  transition: box-shadow 0.3s ease, background 0.3s ease;
+  will-change: transform, filter;
+}
+
+*,
+*::before,
+*::after {
+  will-change: auto;
 }
 
 .ant-card:hover {
   box-shadow: var(--apple-shadow-lg);
   background: rgba(255, 255, 255, 0.85);
+  will-change: transform;
 }
 
 .ant-card-head {
@@ -204,7 +218,7 @@ body {
   font-size: 14px;
   height: 40px;
   padding: 0 20px;
-  transition: all 0.2s ease;
+  transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
   border: none;
   box-shadow: none;
   touch-action: manipulation;
@@ -233,6 +247,7 @@ body {
   background: var(--apple-blue-hover);
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(0, 113, 227, 0.35);
+  will-change: transform;
 }
 
 .ant-btn-default {
@@ -701,6 +716,7 @@ body {
   box-shadow: var(--apple-shadow);
   border: 1px solid rgba(255, 255, 255, 0.3);
   margin-bottom: 24px;
+  will-change: transform, filter;
 }
 
 .page-toolbar {
@@ -720,7 +736,8 @@ body {
   padding: 24px;
   box-shadow: var(--apple-shadow);
   border: 1px solid rgba(255, 255, 255, 0.3);
-  transition: all 0.3s ease;
+  transition: box-shadow 0.3s ease, background 0.3s ease, transform 0.2s ease;
+  will-change: transform, filter;
 }
 
 .stat-card:hover {

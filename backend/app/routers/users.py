@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models import User
-from app.schemas import LoginRequest, TokenResponse, UserOut, UserCreate, UserUpdate, UserPasswordUpdate
+from app.schemas import LoginRequest, TokenResponse, UserOut, UserCreate, UserUpdate, UserPasswordUpdate, UserRoleUpdate
 from app.auth import hash_password, verify_password, create_access_token, get_current_user, require_admin
 
 router = APIRouter(prefix="/api/users", tags=["users"])
@@ -49,6 +49,19 @@ def update_user(user_id: int, req: UserUpdate, db: Session = Depends(get_db), ad
         if existing:
             raise HTTPException(status_code=400, detail="用户名已存在")
         user.username = req.username
+    if req.role is not None:
+        user.role = req.role
+    db.commit()
+    db.refresh(user)
+    return user
+
+
+@router.put("/{user_id}/role", response_model=UserOut)
+def update_user_role(user_id: int, req: UserRoleUpdate, db: Session = Depends(get_db), admin: User = Depends(require_admin)):
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="用户不存在")
+    user.role = req.role
     db.commit()
     db.refresh(user)
     return user

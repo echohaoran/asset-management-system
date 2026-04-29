@@ -12,6 +12,7 @@ import {
   BankOutlined,
   MenuOutlined,
   CloseOutlined,
+  SettingOutlined,
 } from '@ant-design/icons';
 import client from '../api/client';
 import type { User } from '../types';
@@ -43,13 +44,17 @@ export default function AppLayout() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  const isAdmin = user?.role === 'admin' || user?.role === '管理员';
+
   const menuItems = [
     { key: '/', icon: <DashboardOutlined />, label: '工作台' },
-    { key: '/assets', icon: <LaptopOutlined />, label: '资产管理' },
-    { key: '/categories', icon: <AppstoreOutlined />, label: '分类管理' },
-    { key: '/persons', icon: <TeamOutlined />, label: '人员管理' },
-    { key: '/departments', icon: <BankOutlined />, label: '部门管理' },
-    { key: '/reports', icon: <BarChartOutlined />, label: '资产报表' },
+    ...(isAdmin ? [
+      { key: '/assets', icon: <LaptopOutlined />, label: '资产管理' },
+      { key: '/categories', icon: <AppstoreOutlined />, label: '分类管理' },
+      { key: '/persons', icon: <TeamOutlined />, label: '人员管理' },
+      { key: '/departments', icon: <BankOutlined />, label: '部门管理' },
+      { key: '/reports', icon: <BarChartOutlined />, label: '资产报表' },
+    ] : []),
   ];
 
   const handleLogout = () => {
@@ -72,14 +77,27 @@ export default function AppLayout() {
     });
   }
 
+  const getRoleName = (role: string | undefined) => {
+    if (role === 'admin' || role === '管理员') return '管理员';
+    if (role === 'user') return '普通用户';
+    if (role === '来访') return '来访人员';
+    return role || '未知';
+  };
+
   const dropdownItems = {
     items: [
-      { key: 'role', label: `角色: ${user?.role === 'admin' ? '管理员' : '普通用户'}`, disabled: true },
+      { key: 'username', label: user?.username, disabled: true },
+      { key: 'role', label: `角色: ${getRoleName(user?.role)}`, disabled: true },
       { type: 'divider' as const },
+      ...(isAdmin ? [
+        { key: 'users', icon: <SettingOutlined />, label: '账号管理' },
+        { type: 'divider' as const },
+      ] : []),
       { key: 'logout', icon: <LogoutOutlined />, label: '退出登录', danger: true },
     ],
     onClick: ({ key }: { key: string }) => {
       if (key === 'logout') handleLogout();
+      if (key === 'users') navigate('/users');
     },
   };
 
