@@ -109,6 +109,15 @@ After startup:
 
 Default admin account: `admin` / `admin123`
 
+### Feishu Integration (This system supports Feishu contacts sync)
+
+This system **works out of the box without Feishu**. To enable Feishu contacts sync, simply configure the Feishu environment variables.
+
+| Use Case | Feishu Config Required |
+|----------|----------------------|
+| Standalone use (manual person management) | ❌ Not required |
+| Feishu contacts sync | ✅ Required |
+
 ### Must-Read After Clone
 
 New users need to complete the following initialization steps after cloning:
