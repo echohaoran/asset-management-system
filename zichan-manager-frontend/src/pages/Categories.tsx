@@ -94,7 +94,7 @@ export default function Categories() {
         </Form>
       </Modal>
 
-      <Modal title="确认删除" open={deleteId !== null} onOk={handleDelete} onCancel={() => setDeleteId(null)} okText="确认删除" okButtonProps={{ danger: true }}>
+      <Modal title="确认删除" open={deleteId !== null} onOk={handleDelete} onCancel={() => setDeleteId(null)} okText="确认删除" okButtonProps={{ danger: true, style: { background: '#ff3b30', color: '#fff', border: 'none' } }}>
         <p>确定要删除这个分类吗？</p>
       </Modal>
     </div>
