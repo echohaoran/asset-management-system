@@ -107,6 +107,60 @@ docker-compose up -d
 
 默认管理员账号：`admin` / `admin123`
 
+### 克隆后必读
+
+新用户克隆仓库后，需要完成以下初始化步骤：
+
+#### 1. 复制环境变量配置文件
+
+```bash
+# 后端配置
+cp backend/.env_example backend/.env
+
+# 前端配置
+cp zichan-manager-frontend/.env_example zichan-manager-frontend/.env
+```
+
+#### 2. 配置飞书应用（可选）
+
+如果不使用飞书功能，可跳过此步骤，资产管理系统可独立运行。
+
+如需使用飞书功能，请编辑 `backend/.env` 和 `zichan-manager-frontend/.env`，填入飞书应用凭证：
+
+```bash
+# backend/.env
+FEISHU_APP_ID=cli_xxxxxxxxxxxxxxxx
+FEISHU_APP_SECRET=your_feishu_app_secret_here
+
+# zichan-manager-frontend/.env
+VITE_FEISHU_APP_ID=cli_xxxxxxxxxxxxxxxx
+```
+
+获取方式：访问 [飞书开放平台](https://open.feishu.cn/) → 创建企业自建应用 → 获取 App ID 和 App Secret
+
+#### 3. 启动服务
+
+**方式一：Podman/Docker 部署（推荐）**
+```bash
+podman-compose up -d
+```
+
+**方式二：本地开发**
+```bash
+# 后端
+cd backend
+python -m venv .venv
+source .venv/bin/activate  # macOS/Linux
+# .venv\Scripts\activate   # Windows
+pip install -r requirements.txt
+python seed.py && uvicorn app.main:app --reload --port 8000
+
+# 前端（新开终端窗口）
+cd zichan-manager-frontend
+npm install
+npm run dev
+```
+
 ### 部署说明
 
 #### 无需云服务器
