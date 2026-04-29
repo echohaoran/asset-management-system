@@ -69,12 +69,13 @@ export default function AppLayout() {
     }
   };
 
-  if (!user) {
+  useEffect(() => {
+    if (user) return;
     client.get('/api/users/me').then((res) => {
       setUser(res.data);
       localStorage.setItem('user', JSON.stringify(res.data));
     });
-  }
+  }, [user]);
 
   const getRoleName = (role: string | undefined) => {
     if (role === 'admin' || role === '管理员') return '管理员';
