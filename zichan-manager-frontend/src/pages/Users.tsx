@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Table, Button, Modal, Form, Input, Space, message, Popconfirm, Select, Tag } from 'antd';
+import { Table, Button, Modal, Form, Input, Space, message, Select, Tag } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import client from '../api/client';
 import type { User } from '../types';
@@ -118,9 +118,7 @@ export default function Users() {
           <Button type="link" onClick={() => openEdit(record)}>编辑</Button>
           <Button type="link" onClick={() => openPasswordEdit(record)}>改密码</Button>
           {record.id !== currentUser.id && (
-            <Popconfirm title="确定删除?" onConfirm={handleDelete} onCancel={() => setDeleteId(null)}>
-              <Button type="link" danger onClick={() => setDeleteId(record.id)}>删除</Button>
-            </Popconfirm>
+            <Button type="link" danger onClick={() => setDeleteId(record.id)}>删除</Button>
           )}
         </Space>
       ),
@@ -156,6 +154,10 @@ export default function Users() {
             <Input.Password />
           </Form.Item>
         </Form>
+      </Modal>
+
+      <Modal title="确认删除" open={deleteId !== null} onOk={handleDelete} onCancel={() => setDeleteId(null)} okText="确认删除" okButtonProps={{ danger: true }}>
+        <p>确定要删除这个账号吗？</p>
       </Modal>
     </div>
   );

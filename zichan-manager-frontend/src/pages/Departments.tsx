@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Table, Button, Modal, Space, message, Popconfirm, Tabs } from 'antd';
+import { Table, Button, Modal, Space, message, Tabs } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import client from '../api/client';
 import type { Department, Person, Asset } from '../types';
@@ -74,9 +74,7 @@ export default function Departments() {
       render: (_: any, record: Department) => (
         <Space>
           <Button type="link" onClick={() => openDetail(record)}>详情</Button>
-          <Popconfirm title="确定删除?" onConfirm={handleDelete} onCancel={() => setDeleteId(null)}>
-            <Button type="link" danger onClick={() => setDeleteId(record.id)}>删除</Button>
-          </Popconfirm>
+          <Button type="link" danger onClick={() => setDeleteId(record.id)}>删除</Button>
         </Space>
       ),
     },
@@ -138,6 +136,10 @@ export default function Departments() {
             ]}
           />
         )}
+      </Modal>
+
+      <Modal title="确认删除" open={deleteId !== null} onOk={handleDelete} onCancel={() => setDeleteId(null)} okText="确认删除" okButtonProps={{ danger: true }}>
+        <p>确定要删除这个部门吗？</p>
       </Modal>
     </div>
   );

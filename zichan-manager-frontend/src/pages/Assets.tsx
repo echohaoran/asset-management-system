@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { Table, Button, Modal, Form, Input, InputNumber, Select, DatePicker, Space, Tag, message, Popconfirm } from 'antd';
+import { Table, Button, Modal, Form, Input, InputNumber, Select, DatePicker, Space, Tag, message } from 'antd';
 import { PlusOutlined, SearchOutlined, DownloadOutlined, UploadOutlined } from '@ant-design/icons';
 import { useSearchParams } from 'react-router-dom';
 import dayjs from 'dayjs';
@@ -373,9 +373,7 @@ export default function Assets() {
           {record.status === '领用中' && <Button type="link" onClick={() => handleReturn(record.id)}>归还</Button>}
           {record.status !== '已报废' && <Button type="link" danger onClick={() => openDispose(record.id)}>报废</Button>}
           <Button type="link" onClick={() => openEdit(record)}>编辑</Button>
-          <Popconfirm title="确定删除?" onConfirm={handleDelete} onCancel={() => setDeleteId(null)}>
-            <Button type="link" danger onClick={() => setDeleteId(record.id)}>删除</Button>
-          </Popconfirm>
+          <Button type="link" danger onClick={() => setDeleteId(record.id)}>删除</Button>
         </Space>
       ),
     },
@@ -627,6 +625,10 @@ export default function Assets() {
             ]}
           />
         </div>
+      </Modal>
+
+      <Modal title="确认删除" open={deleteId !== null} onOk={handleDelete} onCancel={() => setDeleteId(null)} okText="确认删除" okButtonProps={{ danger: true }}>
+        <p>确定要删除这个资产吗？</p>
       </Modal>
     </div>
   );

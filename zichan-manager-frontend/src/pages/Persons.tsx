@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Table, Button, Modal, Form, Input, Space, message, Popconfirm, Select, Tag, List, Checkbox, Spin, AutoComplete } from 'antd';
+import { Table, Button, Modal, Form, Input, Space, message, Select, Tag, List, Checkbox, Spin, AutoComplete } from 'antd';
 import { PlusOutlined, LinkOutlined, DownOutlined, RightOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import client from '../api/client';
@@ -356,9 +356,7 @@ export default function Persons() {
             资产({personAssetCount[record.id] || 0})
           </Button>
           <Button type="link" onClick={() => openEdit(record)}>编辑</Button>
-          <Popconfirm title="确定删除?" onConfirm={handleDelete} onCancel={() => setDeleteId(null)}>
-            <Button type="link" danger onClick={() => setDeleteId(record.id)}>删除</Button>
-          </Popconfirm>
+          <Button type="link" danger onClick={() => setDeleteId(record.id)}>删除</Button>
         </Space>
       ),
     },
@@ -606,6 +604,10 @@ export default function Persons() {
             ]}
           />
         )}
+      </Modal>
+
+      <Modal title="确认删除" open={deleteId !== null} onOk={handleDelete} onCancel={() => setDeleteId(null)} okText="确认删除" okButtonProps={{ danger: true }}>
+        <p>确定要删除这个人员吗？</p>
       </Modal>
     </div>
   );

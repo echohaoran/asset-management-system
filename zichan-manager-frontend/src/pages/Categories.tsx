@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Table, Button, Modal, Form, Input, Space, message, Popconfirm } from 'antd';
+import { Table, Button, Modal, Form, Input, Space, message } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import client from '../api/client';
 import type { Category } from '../types';
@@ -70,9 +70,7 @@ export default function Categories() {
       render: (_: any, record: Category) => (
         <Space>
           <Button type="link" onClick={() => openEdit(record)}>编辑</Button>
-          <Popconfirm title="确定删除?" onConfirm={handleDelete} onCancel={() => setDeleteId(null)}>
-            <Button type="link" danger onClick={() => setDeleteId(record.id)}>删除</Button>
-          </Popconfirm>
+          <Button type="link" danger onClick={() => setDeleteId(record.id)}>删除</Button>
         </Space>
       ),
     },
@@ -85,7 +83,7 @@ export default function Categories() {
       </Space>
       <Table columns={columns} dataSource={cats} rowKey="id" loading={loading} />
 
-      <Modal title={editing ? '编辑分类' : '新增分类'} open={modalOpen} onOk={handleSubmit} onCancel={() => setModalOpen(false)}>
+      <Modal title="编辑分类" open={modalOpen} onOk={handleSubmit} onCancel={() => setModalOpen(false)}>
         <Form form={form} layout="vertical">
           <Form.Item name="name" label="分类名称 *" rules={[{ required: true }]}>
             <Input />
@@ -94,6 +92,10 @@ export default function Categories() {
             <Input.TextArea rows={3} />
           </Form.Item>
         </Form>
+      </Modal>
+
+      <Modal title="确认删除" open={deleteId !== null} onOk={handleDelete} onCancel={() => setDeleteId(null)} okText="确认删除" okButtonProps={{ danger: true }}>
+        <p>确定要删除这个分类吗？</p>
       </Modal>
     </div>
   );
