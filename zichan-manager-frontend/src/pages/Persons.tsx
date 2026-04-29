@@ -217,13 +217,18 @@ export default function Persons() {
     fetch();
   };
 
-  const handleDelete = async (id: number) => {
+  const [deleteId, setDeleteId] = useState<number | null>(null);
+
+  const handleDelete = async () => {
+    if (deleteId === null) return;
     try {
-      await client.delete(`/api/persons/${id}`);
+      await client.delete(`/api/persons/${deleteId}`);
       message.success('已删除');
+      setDeleteId(null);
       fetch();
     } catch (err: any) {
       message.error(err.response?.data?.detail || '删除失败');
+      setDeleteId(null);
     }
   };
 
@@ -351,8 +356,8 @@ export default function Persons() {
             资产({personAssetCount[record.id] || 0})
           </Button>
           <Button type="link" onClick={() => openEdit(record)}>编辑</Button>
-          <Popconfirm title="确定删除?" onConfirm={() => handleDelete(record.id)}>
-            <Button type="link" danger>删除</Button>
+          <Popconfirm title="确定删除?" onConfirm={handleDelete} onCancel={() => setDeleteId(null)}>
+            <Button type="link" danger onClick={() => setDeleteId(record.id)}>删除</Button>
           </Popconfirm>
         </Space>
       ),
